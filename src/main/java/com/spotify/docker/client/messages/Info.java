@@ -3,6 +3,7 @@
  * docker-client
  * --
  * Copyright (C) 2016 Spotify AB
+ * Copyright (C) 2024 Minoru NAKAMURA <nminoru1975@gmail.com>
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -199,6 +200,12 @@ public abstract class Info {
   @JsonProperty("SystemTime")
   public abstract Date systemTime();
 
+  /**
+   * @since API 1.39
+   */    
+  @JsonProperty("Warnings")
+  public abstract ImmutableList<String> warnings();    
+
   @JsonCreator
   static Info create(
       @JsonProperty("Architecture") final String architecture,
@@ -244,7 +251,8 @@ public abstract class Info {
       @JsonProperty("SwapLimit") final Boolean swapLimit,
       @JsonProperty("Swarm") final SwarmInfo swarm,
       @JsonProperty("SystemStatus") final List<List<String>> systemStatus,
-      @JsonProperty("SystemTime") final Date systemTime) {
+      @JsonProperty("SystemTime") final Date systemTime
+      @JsonProperty("Warnings") final ImmutableList<String> warnings) {
     final ImmutableList.Builder<ImmutableList<String>> driverStatusB = ImmutableList.builder();
     if (driverStatus != null) {
       for (final List<String> ds : driverStatus) {
@@ -266,7 +274,7 @@ public abstract class Info {
         kernelMemory, kernelVersion, labelsT, memTotal, memoryLimit, cpus, eventsListener,
         fileDescriptors, goroutines, name, noProxy, oomKillDisable, operatingSystem, osType,
         plugins, registryConfig, serverVersion, swapLimit, swarm, systemStatusB.build(), 
-        systemTime);
+        systemTime, warnings);
   }
 
   @AutoValue

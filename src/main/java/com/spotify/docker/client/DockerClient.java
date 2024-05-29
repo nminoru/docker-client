@@ -4,6 +4,7 @@
  * --
  * Copyright (C) 2016 Spotify AB
  * Copyright (C) 2016 Thoughtworks, Inc
+ * Copyright (C) 2024 Minoru NAKAMURA <nminoru1975@gmail.com>
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -950,6 +951,10 @@ public interface DockerClient extends Closeable {
    * @throws InterruptedException If the thread is interrupted
    */
   ContainerExit waitContainer(String containerId) throws DockerException, InterruptedException;
+
+
+  ContainerExit waitContainer(String containerId, String condition)
+      throws DockerException, InterruptedException;    
 
   /**
    * Kill a docker container.
@@ -2147,6 +2152,17 @@ public interface DockerClient extends Closeable {
     public static ExecCreateParam user(final String user) {
       return create("User", user);
     }
+
+    /**
+     * WorkingDir that will exec process inside the container.
+     *
+     * @param workingDir workingDir
+     * @return ExecCreateParam
+     * @since Docker 17.12, API version 1.35
+     */
+    public static ExecCreateParam workinigDir(final String workingDir) {
+      return create("WorkingDir", user);
+    }      
   }
 
 
@@ -2227,6 +2243,17 @@ public interface DockerClient extends Closeable {
     public static LogsParam since(final Integer timestamp) {
       return create("since", String.valueOf(timestamp));
     }
+
+    /**
+     * Filter logs and only output entries before given Unix timestamp. Only available in Docker API
+     * &gt;= 1.35.
+     *
+     * @param timestamp Only output entries before timestamp.
+     * @return LogsParam
+     */
+    public static LogsParam until(final Integer timestamp) {
+      return create("until", String.valueOf(timestamp));
+    }      
 
     /**
      * Print timestamp for every log line.

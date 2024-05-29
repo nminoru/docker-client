@@ -6,6 +6,7 @@
  * Copyright (c) 2014 Oleg Poleshuk
  * Copyright (c) 2014 CyDesign Ltd
  * Copyright (c) 2016 ThoughtWorks, Inc
+ * Copyright (C) 2024 Minoru NAKAMURA <nminoru1975@gmail.com>
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -869,10 +870,30 @@ public class DefaultDockerClient implements DockerClient, Closeable {
 
   @Override
   public ContainerExit waitContainer(final String containerId)
+      throws DockerException, InterruptedException {      
+    return waitContainer(containerId, null);
+  }
+
+  @Override
+  public ContainerExit waitContainer(final String containerId, final String condition)
       throws DockerException, InterruptedException {
     try {
-      final WebTarget resource = noTimeoutResource()
+      final String apiVersion = version().apiVersion();
+      final int versionComparison = compareVersion(apiVersion, "1.34");
+
+      // Version below 1.34
+      if (versionComparison < 0 && condition != null) {
+        throw new UnsupportedApiVersionException(apiVersion);
+      }
+    
+      WebTarget resource = noTimeoutResource()
           .path("containers").path(containerId).path("wait");
+
+      if (condition != null && !condition.isEmpty()) {
+        // TODO: check condition=removed
+        resource = resource.queryParam("condition", condition);
+      }
+      
       // Wait forever
       return request(POST, ContainerExit.class, resource,
                      resource.request(APPLICATION_JSON_TYPE));

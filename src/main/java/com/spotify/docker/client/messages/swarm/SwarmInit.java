@@ -41,8 +41,26 @@ public abstract class SwarmInit {
   public abstract String advertiseAddr();
 
   @Nullable
+  @JsonProperty("DataPathAddr")
+  public abstract String dataPathAddr();
+    
+  /**
+   * @since API version 1.39
+   */    
+  @Nullable
+  @JsonProperty("DefaultAddrPool")
+  public abstract ImmutableList<String> defaultAddrPool();
+    
+  @Nullable
   @JsonProperty("ForceNewCluster")
   public abstract Boolean forceNewCluster();
+
+  /**
+   * @since API version 1.39
+   */
+  @Nullable
+  @JsonProperty("SubnetSize")
+  public abstract ImmutableList<Long> subnetSize();
 
   @Nullable
   @JsonProperty("Spec")
@@ -54,7 +72,13 @@ public abstract class SwarmInit {
 
     public abstract Builder advertiseAddr(String advertiseAddr);
 
+    public abstract Builder dataPathAddr(String dataPathAddr);
+      
+    public abstract Builder defaultAddrPool(ImmutableList<String> defaultAddrPool);
+      
     public abstract Builder forceNewCluster(Boolean forceNewCluster);
+
+    public abstract Builder subnetSize(ImmutableList<Long> subnetSize);
 
     public abstract Builder swarmSpec(SwarmSpec swarmSpec);
 
@@ -69,13 +93,27 @@ public abstract class SwarmInit {
   static SwarmInit create(
       @JsonProperty("ListenAddr") final String listenAddr,
       @JsonProperty("AdvertiseAddr") final String advertiseAddr,
+      @JsonProperty("DataPathAddr") final String dataPathAddr,
+      @JsonProperty("DefaultAddrPool") final ImmutableList<String> defaultAddrPool,
       @JsonProperty("ForceNewCluster") final Boolean forceNewCluster,
+      @JsonProperty("SubnetSize") final ImmutableList<Long> subnetSize,
       @JsonProperty("Spec") final SwarmSpec swarmSpec) {
-    return builder()
+    final Builder builder = builder()      
         .listenAddr(listenAddr)
         .advertiseAddr(advertiseAddr)
+        .dataPathAddr(dataPathAddr)
         .forceNewCluster(forceNewCluster)
         .swarmSpec(swarmSpec)
         .build();
+
+    if (defaultAddrPool != null) {
+      builder.defaultAddrPool(defaultAddrPool);
+    }
+    
+    if (subnetSize != null) {
+      builder.subnetSize(subnetSize);
+    }
+    
+    return builder.build();    
   }
 }

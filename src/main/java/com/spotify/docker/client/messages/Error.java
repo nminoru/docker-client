@@ -28,24 +28,20 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableList;
+import java.util.List;
 import javax.annotation.Nullable;
-
 
 @AutoValue
 @JsonAutoDetect(fieldVisibility = ANY, getterVisibility = NONE, setterVisibility = NONE)
-public abstract class ContainerExit {
+public abstract class Error {
 
-  @JsonProperty("StatusCode")
-  public abstract Long statusCode();
-
-  @Nullable        
-  @JsonProperty("Error")
-  public abstract Error error();
+  @JsonProperty("Message")
+  public abstract String message();
 
   @JsonCreator
-  public static ContainerExit create(
-      @JsonProperty("StatusCode") final Long statusCode,
-      @JsonProperty("Error") final Error error) {      
-    return new AutoValue_ContainerExit(statusCode, error);
+  static Error create(
+      @JsonProperty("Message") final String message) {
+    return new AutoValue_Error(message);
   }
 }
