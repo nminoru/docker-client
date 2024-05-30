@@ -3,6 +3,7 @@
  * docker-client
  * --
  * Copyright (C) 2016 Spotify AB
+ * Copyright (C) 2024 Minoru NAKAMURA <nminoru1975@gmail.com>
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,8 +49,16 @@ import javax.annotation.Nullable;
 public abstract class HostConfig {
 
   @Nullable
-  @JsonProperty("Binds")
-  public abstract ImmutableList<String> binds();
+  @JsonProperty("CpuShares")
+  public abstract Long cpuShares();
+
+  @Nullable
+  @JsonProperty("Memory")
+  public abstract Long memory();
+
+  @Nullable
+  @JsonProperty("CgroupParent")
+  public abstract String cgroupParent();
 
   @Nullable
   @JsonProperty("BlkioWeight")
@@ -76,28 +85,147 @@ public abstract class HostConfig {
   public abstract ImmutableList<BlkioDeviceRate> blkioDeviceWriteIOps();
 
   @Nullable
+  @JsonProperty("CpuPeriod")
+  public abstract Long cpuPeriod();
+
+  @Nullable
+  @JsonProperty("CpuQuota")
+  public abstract Long cpuQuota();
+
+  @Nullable
+  @JsonProperty("CpuRealtimePeriod")
+  public abstract Long cpuRealtimePeriod();
+
+  @Nullable
+  @JsonProperty("CpuRealtimeRuntime")
+  public abstract Long cpuRealtimeRuntime();
+
+  @Nullable
+  @JsonProperty("CpusetCpus")
+  public abstract String cpusetCpus();
+
+  @Nullable
+  @JsonProperty("CpusetMems")
+  public abstract String cpusetMems();
+
+  @Nullable
+  @JsonProperty("Devices")
+  public abstract ImmutableList<Device> devices();
+
+  @Nullable
+  @JsonProperty("DeviceCgroupRules")
+  public abstract ImmutableList<String> deviceCgroupRules();
+
+  @Nullable
+  @JsonProperty("DeviceRequests")
+  public abstract ImmutableList<DeviceRequests> deviceRequests();
+
+  @Nullable
+  @JsonProperty("KernelMemory")
+  public abstract Long kernelMemory();
+
+  @Nullable
+  @JsonProperty("KernelMemoryTCP")
+  public abstract Long kernelMemoryTCP();
+ 
+  @Nullable
+  @JsonProperty("MemoryReservation")
+  public abstract Long memoryReservation();
+
+  @Nullable
+  @JsonProperty("MemorySwap")
+  public abstract Long memorySwap();
+
+  @Nullable
+  @JsonProperty("MemorySwappiness")
+  public abstract Integer memorySwappiness();
+
+  @Nullable
+  @JsonProperty("NanoCpus")
+  public abstract Long nanoCpus();
+
+  @Nullable
+  @JsonProperty("OomKillDisable")
+  public abstract Boolean oomKillDisable();
+
+  @Nullable
+  @JsonProperty("Init")
+  public abstract Boolean init();
+
+  /**
+   * Tune container pids limit (set -1 for unlimited).
+   * Only works for kernels &gt;= 4.3
+   * @return An integer indicating the pids limit.
+   */
+  @Nullable
+  @JsonProperty("PidsLimit")
+  public abstract Integer pidsLimit();
+
+  @Nullable
+  @JsonProperty("Ulimits")
+  public abstract ImmutableList<Ulimit> ulimits();
+
+  @Nullable
+  @JsonProperty("CpuCount")
+  public abstract Long cpuCount();
+
+  @Nullable
+  @JsonProperty("CpuPercent")
+  public abstract Long cpuPercent();
+
+  @Nullable
+  @JsonProperty("IOMaximumIOps")
+  public abstract Long ioMaximumIOps();
+
+  @Nullable
+  @JsonProperty("IOMaximumBandwidth")
+  public abstract Long ioMaximumBandwidth();
+        
+  @Nullable
+  @JsonProperty("Binds")
+  public abstract ImmutableList<String> binds();
+
+  @Nullable
   @JsonProperty("ContainerIDFile")
   public abstract String containerIdFile();
 
   @Nullable
-  @JsonProperty("LxcConf")
-  public abstract ImmutableList<LxcConfParameter> lxcConf();
-
-  @Nullable
-  @JsonProperty("Privileged")
-  public abstract Boolean privileged();
+  @JsonProperty("LogConfig")
+  public abstract LogConfig logConfig();
 
   @Nullable
   @JsonProperty("PortBindings")
   public abstract ImmutableMap<String, List<PortBinding>> portBindings();
 
   @Nullable
-  @JsonProperty("Links")
-  public abstract ImmutableList<String> links();
+  @JsonProperty("RestartPolicy")
+  public abstract RestartPolicy restartPolicy();
 
   @Nullable
-  @JsonProperty("PublishAllPorts")
-  public abstract Boolean publishAllPorts();
+  @JsonProperty("AutoRemove")
+  public abstract Boolean autoRemove();
+
+  @Nullable
+  @JsonProperty("VolumeDriver")
+  public abstract String volumeDriver();
+  
+  @Nullable
+  @JsonProperty("VolumesFrom")
+  public abstract ImmutableList<String> volumesFrom();
+
+    // TODO: Mounts
+
+  @Nullable
+  @JsonProperty("Capabilities")
+  public abstract ImmutableList<String> capabilities();
+
+  @Nullable
+  @JsonProperty("CapAdd")
+  public abstract ImmutableList<String> capAdd();
+
+  @Nullable
+  @JsonProperty("CapDrop")
+  public abstract ImmutableList<String> capDrop();
 
   @Nullable
   @JsonProperty("Dns")
@@ -110,7 +238,7 @@ public abstract class HostConfig {
   @Nullable
   @JsonProperty("DnsSearch")
   public abstract ImmutableList<String> dnsSearch();
-
+    
   @Nullable
   @JsonProperty("ExtraHosts")
   public abstract ImmutableList<String> extraHosts();
@@ -118,139 +246,90 @@ public abstract class HostConfig {
   @Nullable
   @JsonProperty("GroupAdd")
   public abstract ImmutableList<String> groupAdd();
-  
-  @Nullable
-  @JsonProperty("VolumesFrom")
-  public abstract ImmutableList<String> volumesFrom();
-
-  @Nullable
-  @JsonProperty("CapAdd")
-  public abstract ImmutableList<String> capAdd();
-
-  @Nullable
-  @JsonProperty("CapDrop")
-  public abstract ImmutableList<String> capDrop();
-
-  @Nullable
-  @JsonProperty("NetworkMode")
-  public abstract String networkMode();
-
-  @Nullable
-  @JsonProperty("SecurityOpt")
-  public abstract ImmutableList<String> securityOpt();
-
-  @Nullable
-  @JsonProperty("Devices")
-  public abstract ImmutableList<Device> devices();
-
-  @Nullable
-  @JsonProperty("Memory")
-  public abstract Long memory();
-
-  @Nullable
-  @JsonProperty("MemorySwap")
-  public abstract Long memorySwap();
-
-  @Nullable
-  @JsonProperty("KernelMemory")
-  public abstract Long kernelMemory();
-
-  @Nullable
-  @JsonProperty("MemorySwappiness")
-  public abstract Integer memorySwappiness();
-
-  @Nullable
-  @JsonProperty("MemoryReservation")
-  public abstract Long memoryReservation();
-
-  @Nullable
-  @JsonProperty("NanoCpus")
-  public abstract Long nanoCpus();
-
-  @Nullable
-  @JsonProperty("CpuPeriod")
-  public abstract Long cpuPeriod();
-
-  @Nullable
-  @JsonProperty("CpuShares")
-  public abstract Long cpuShares();
-
-  @Nullable
-  @JsonProperty("CpusetCpus")
-  public abstract String cpusetCpus();
-
-  @Nullable
-  @JsonProperty("CpusetMems")
-  public abstract String cpusetMems();
-
-  @Nullable
-  @JsonProperty("CpuQuota")
-  public abstract Long cpuQuota();
-
-  @Nullable
-  @JsonProperty("CgroupParent")
-  public abstract String cgroupParent();
-
-  @Nullable
-  @JsonProperty("RestartPolicy")
-  public abstract RestartPolicy restartPolicy();
-
-  @Nullable
-  @JsonProperty("LogConfig")
-  public abstract LogConfig logConfig();
 
   @Nullable
   @JsonProperty("IpcMode")
   public abstract String ipcMode();
 
   @Nullable
-  @JsonProperty("Ulimits")
-  public abstract ImmutableList<Ulimit> ulimits();
+  @JsonProperty("Cgroup")
+  public abstract String cgroup();
 
   @Nullable
-  @JsonProperty("PidMode")
-  public abstract String pidMode();
-
-  @Nullable
-  @JsonProperty("ShmSize")
-  public abstract Long shmSize();
-
-  @Nullable
-  @JsonProperty("OomKillDisable")
-  public abstract Boolean oomKillDisable();
+  @JsonProperty("Links")
+  public abstract ImmutableList<String> links();
 
   @Nullable
   @JsonProperty("OomScoreAdj")
   public abstract Integer oomScoreAdj();
 
   @Nullable
-  @JsonProperty("AutoRemove")
-  public abstract Boolean autoRemove();
+  @JsonProperty("PidMode")
+  public abstract String pidMode();
 
-  /**
-   * Tune container pids limit (set -1 for unlimited).
-   * Only works for kernels &gt;= 4.3
-   * @return An integer indicating the pids limit.
-   */
   @Nullable
-  @JsonProperty("PidsLimit")
-  public abstract Integer pidsLimit();
+  @JsonProperty("Privileged")
+  public abstract Boolean privileged();
+
+  @Nullable
+  @JsonProperty("PublishAllPorts")
+  public abstract Boolean publishAllPorts();
+
+  @Nullable
+  @JsonProperty("ReadonlyRootfs")
+  public abstract Boolean readonlyRootfs();
+
+  @Nullable
+  @JsonProperty("SecurityOpt")
+  public abstract ImmutableList<String> securityOpt();
+
+  @Nullable
+  @JsonProperty("StorageOpt")
+  public abstract ImmutableMap<String, String> storageOpt();
 
   @Nullable
   @JsonProperty("Tmpfs")
   public abstract ImmutableMap<String, String> tmpfs();
 
   @Nullable
-  @JsonProperty("ReadonlyRootfs")
-  public abstract Boolean readonlyRootfs();
-  
+  @JsonProperty("UTSMode")
+  public abstract String utsMode();
+
   @Nullable
-  @JsonProperty("StorageOpt")
-  public abstract ImmutableMap<String, String> storageOpt();
+  @JsonProperty("UsernsMode")
+  public abstract String usernsMode();
+
+  @Nullable
+  @JsonProperty("ShmSize")
+  public abstract Long shmSize();
 
   @Nullable
   @JsonProperty("Runtime")
   public abstract String runtime();
+
+  @Nullable
+  @JsonProperty("ConsoleSize")
+  public abstract ImmutableList<Integer> consoleSize();
+
+  @Nullable
+  @JsonProperty("Isolation")
+  public abstract String isolation();
+
+  @Nullable
+  @JsonProperty("MaskedPaths")
+  public abstract ImmutableList<String> maskedPaths();
+
+  @Nullable
+  @JsonProperty("ReadonlyPaths")
+  public abstract ImmutableList<String> readonlyPaths();
+    
+  @Nullable
+  @JsonProperty("LxcConf")
+  public abstract ImmutableList<LxcConfParameter> lxcConf();
+
+  @Nullable
+  @JsonProperty("NetworkMode")
+  public abstract String networkMode();
 
 
   @JsonCreator
@@ -304,7 +383,26 @@ public abstract class HostConfig {
       @JsonProperty("Tmpfs") final Map<String, String> tmpfs,
       @JsonProperty("ReadonlyRootfs") final Boolean readonlyRootfs,
       @JsonProperty("Runtime") final String runtime,
-      @JsonProperty("StorageOpt") final Map<String, String> storageOpt) {
+      @JsonProperty("StorageOpt") final Map<String, String> storageOpt,
+      @JsonProperty("CpuRealtimePeriod") final Long cpuRealtimePeriod,
+      @JsonProperty("CpuRealtimeRuntime") final Long cpuRealtimeRuntime,
+      @JsonProperty("DeviceCgroupRules") final List<String> deviceCgroupRules,
+      @JsonProperty("DeviceRequests") final List<String> deviceRequests,
+      @JsonProperty("KernelMemoryTCP") final Long kernelMemoryTCP,
+      @JsonProperty("Init") final Boolean init,
+      @JsonProperty("CpuCount") final Long cpuCount,
+      @JsonProperty("CpuPercent") final Long cpuPercent,
+      @JsonProperty("IOMaximumIOps") final Long ioMaximumIOps,
+      @JsonProperty("IOMaximumBandwidth") final Long ioMaximumBandwidth,
+      @JsonProperty("VolumeDriver") final String volumeDriver,
+      @JsonProperty("Capabilities") final List<String> capabilities,
+      @JsonProperty("Cgroup") final String cgroup,
+      @JsonProperty("UTSMode") final String utsMode,
+      @JsonProperty("UsernsMode") final String usernsMode,
+      @JsonProperty("ConsoleSize") final List<Integer> consoleSize,
+      @JsonProperty("Isolation") final String isolation,
+      @JsonProperty("MaskedPaths") final List<String> maskedPaths,
+      @JsonProperty("ReadonlyPaths") final List<String> readonlyPaths) {
     return builder()
         .binds(binds)
         .blkioWeight(blkioWeight)
@@ -356,6 +454,25 @@ public abstract class HostConfig {
         .readonlyRootfs(readonlyRootfs)
         .storageOpt(storageOpt)
         .runtime(runtime)
+        .cpuRealtimePeriod(cpuRealtimePeriod)
+        .cpuRealtimeRuntime(cpuRealtimeRuntime)
+        .deviceCgroupRules(deviceCgroupRules)
+        .deviceRequests(deviceRequests)
+        .kernelMemoryTCP(kernelMemoryTCP)
+        .init(init)
+        .cpuCount(cpuCount)
+        .cpuPercent(cpuPercent)
+        .ioMaximumIOps(ioMaximumIOps)
+        .ioMaximumBandwidth(ioMaximumBandwidth)
+        .volumeDriver(volumeDriver)
+        .capabilities(capabilities)
+        .cgroup(cgroup)
+        .utsMode(utsMode)
+        .usernsMode(usernsMode)
+        .consoleSize(consoleSize)
+        .isolation(isolation)
+        .maskedPaths(maskedPaths)
+        .readonlyPaths(readonlyPaths)
         .build();
   }
 
@@ -662,6 +779,54 @@ public abstract class HostConfig {
     public abstract Builder storageOpt(Map<String, String> tmpfs);
 
     public abstract Builder runtime(String runtime);
+
+    public abstract Builder cpuRealtimePeriod(Long cpuRealtimePeriod);
+
+    public abstract Builder cpuRealtimeRuntime(Long cpuRealtimeRuntime);
+
+    public abstract Builder deviceCgroupRules(List<String> deviceCgroupRules)
+
+    public abstract Builder deviceCgroupRules(String... deviceCgroupRules)
+
+    public abstract Builder deviceRequests(List<DeviceRequests> deviceRequests)
+        
+    public abstract Builder deviceRequests(DeviceRequests... deviceRequests)
+
+    public abstract Builder kernelMemoryTCP(Long kernelMemoryTCP);
+
+    public abstract Builder init(Boolean init);
+
+    public abstract Builder cpuCount(Long cpuCount);
+      
+    public abstract Builder cpuPercent(Long cpuPercent);
+
+    public abstract Builder ioMaximumIOps(Long ioMaximumIOps);
+
+    public abstract Builder ioMaximumBandwidth(Long ioMaximumBandwidth);
+      
+    public abstract Builder volumeDriver(String volumeDriver);
+      
+    public abstract Builder capabilities(List<String> capabilities);
+
+    public abstract Builder capabilities(String... capabilities);      
+
+    public abstract Builder cgroup(String cgroup);
+      
+    public abstract Builder utsMode(String utsMode);
+
+    public abstract Builder usernsMode(String usernsMode);
+
+    public abstract Builder consoleSize(List<Integer> consoleSize);
+
+    public abstract Builder isolation(String isolation);      
+      
+    public abstract Builder maskedPaths(List<String> maskedPaths);
+
+    public abstract Builder maskedPaths(String... maskedPaths);
+
+    public abstract Builder readonlyPaths(List<String> readonlyPaths);
+
+    public abstract Builder readonlyPaths(String... readonlyPaths);      
 
     // Validation of property values using AutoValue requires we split the build method into two.
     // AutoValue implements this package-private method.

@@ -1841,6 +1841,16 @@ public interface DockerClient extends Closeable {
     }
 
     /**
+     * Filter networks by dangling
+     * @param dangling TODO
+     * @return The ListNetworksParam for the given dangling.
+     * @since Docker 19.03, API version 1.40
+     */
+    public static ListNetworksParam withDangling(final boolean dangling) {
+      return filter("dangling", dangling);
+    }      
+
+    /**
      * Filter networks by network driver.
      * @param driver The network driver name.
      * @return The ListNetworksParam for the given driver.

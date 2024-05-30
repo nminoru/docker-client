@@ -3,6 +3,7 @@
  * docker-client
  * --
  * Copyright (C) 2016 Spotify AB
+ * Copyright (C) 2024 Minoru NAKAMURA <nminoru1975@gmail.com>
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,6 +98,14 @@ public abstract class ContainerConfig {
   public abstract ImmutableList<String> cmd();
 
   @Nullable
+  @JsonProperty("Healthcheck")
+  public abstract Healthcheck healthcheck();
+
+  @Nullable
+  @JsonProperty("ArgsEscaped")
+  public abstract Boolean argsEscaped();
+
+  @Nullable
   @JsonProperty("Image")
   public abstract String image();
 
@@ -125,6 +134,10 @@ public abstract class ContainerConfig {
   public abstract Boolean networkDisabled();
 
   @Nullable
+  @JsonProperty("MacAddress")
+  public abstract String macAddress();
+
+  @Nullable
   @JsonProperty("OnBuild")
   public abstract ImmutableList<String> onBuild();
 
@@ -133,20 +146,8 @@ public abstract class ContainerConfig {
   public abstract ImmutableMap<String, String> labels();
 
   @Nullable
-  @JsonProperty("MacAddress")
-  public abstract String macAddress();
-
-  @Nullable
-  @JsonProperty("HostConfig")
-  public abstract HostConfig hostConfig();
-
-  @Nullable
   @JsonProperty("StopSignal")
   public abstract String stopSignal();
-
-  @Nullable
-  @JsonProperty("Healthcheck")
-  public abstract Healthcheck healthcheck();
 
   /**
    * @deprecated  As of release 7.0.0, replaced by {@link #stopSignal()}.
@@ -155,6 +156,18 @@ public abstract class ContainerConfig {
   public String getStopSignal() {
     return stopSignal();
   }
+
+  @Nullable
+  @JsonProperty("StopTimeout")
+  public abstract Integer stopTimeout();
+
+  @Nullable
+  @JsonProperty("Shell")
+  public abstract ImmutableList<String> shell();
+
+  @Nullable
+  @JsonProperty("HostConfig")
+  public abstract HostConfig hostConfig();
 
   @Nullable
   @JsonProperty("NetworkingConfig")
@@ -175,6 +188,7 @@ public abstract class ContainerConfig {
       @JsonProperty("StdinOnce") final Boolean stdinOnce,
       @JsonProperty("Env") final List<String> env,
       @JsonProperty("Cmd") final List<String> cmd,
+      @JsonProperty("ArgsEscaped") final Boolean argsEscaped,
       @JsonProperty("Image") final String image,
       @JsonProperty("Volumes") final Set<String> volumes,
       @JsonProperty("WorkingDir") final String workingDir,
@@ -185,9 +199,11 @@ public abstract class ContainerConfig {
       @JsonProperty("MacAddress") final String macAddress,
       @JsonProperty("HostConfig") final HostConfig hostConfig,
       @JsonProperty("StopSignal") final String stopSignal,
+      @JsonProperty("StopTimeout") final Integer stopTimeout,
+      @JsonProperty("Shell") final ImmutableList<String> shell,
       @JsonProperty("Healthcheck") final Healthcheck healthcheck,
       @JsonProperty("NetworkingConfig") final NetworkingConfig networkingConfig) {
-    return builder()
+  return builder()
         .hostname(hostname)
         .domainname(domainname)
         .user(user)
@@ -213,6 +229,9 @@ public abstract class ContainerConfig {
         .onBuild(onBuild)
         .labels(labels)
         .healthcheck(healthcheck)
+        .stopTimeout(stopTimeout != null ? stopTimeout : 10)      
+        .argsEscaped(argsEscaped)
+        .shell(shell)
         .build();
   }
 
@@ -308,6 +327,8 @@ public abstract class ContainerConfig {
     public abstract Builder hostConfig(final HostConfig hostConfig);
 
     public abstract Builder stopSignal(final String stopSignal);
+      
+    public abstract Builder stopTimeout(final Integer stopTimeout);
 
     public abstract Builder healthcheck(final Healthcheck healthcheck);
 
