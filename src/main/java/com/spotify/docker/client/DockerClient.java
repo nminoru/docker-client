@@ -4,6 +4,7 @@
  * --
  * Copyright (C) 2016 Spotify AB
  * Copyright (C) 2016 Thoughtworks, Inc
+ * Copyright (C) 2024 Minoru NAKAMURA <nminoru1975@gmail.com>
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -2540,12 +2541,49 @@ public interface DockerClient extends Closeable {
     }
 
     /**
+     * Show shared size.
+     *
+     * @return ListImagesParam
+     */
+    public static ListImagesParam sharedSize() {
+      return sharedSize(true);
+    }      
+
+    /**
+     * Show shared size.
+     *
+     * @return ListImagesParam
+     */
+    public static ListImagesParam sharedSize(final boolean sharedSize) {
+      return create("shared-size", String.valueOf(sharedSize));
+    }
+
+    /**
      * Show digests.
      *
      * @return ListImagesParam
      */
     public static ListImagesParam digests() {
-      return create("digests", "1");
+      return digests(true);
+    }      
+      
+    /**
+     * Show digests.
+     *
+     * @return ListImagesParam
+     */
+    public static ListImagesParam digests(final boolean digests) {
+      return create("digests", String.valueOf(digests));
+    }
+
+    /**
+     * Show images by image-name.
+     *
+     * @param imageName &lt;image-name&gt;[:&lt;tag&gt;], &lt;image id&gt; or &lt;image@digest&gt;
+     * @return ListImagesParam
+     */
+    public static ListImagesParam before(final String imageName) {
+      return filter("before", imageName);
     }
 
     /**
@@ -2590,13 +2628,45 @@ public interface DockerClient extends Closeable {
     }
 
     /**
+     * Show images by image-name.
+     *
+     * @param imageName &lt;image-name&gt;[:&lt;tag&gt;]
+     * @return ListImagesParam
+     */
+    public static ListImagesParam reference(final String imageName) {
+      return filter("reference", imageName);
+    }
+      
+    /**
+     * Show images by image-name.
+     *
+     * @param imageName &lt;image-name&gt;[:&lt;tag&gt;], &lt;image id&gt; or &lt;image@digest&gt;
+     * @return ListImagesParam
+     */
+    public static ListImagesParam since(final String imageName) {
+      return filter("before", imageName);
+    }
+
+    /**
+     * Show images until the specified timestamp.
+     *
+     * @param timestamp timestamp
+     * @return ListImagesParam
+     */
+    public static ListImagesParam until(final String timestamp) {
+      return filter("until", timestamp);
+    }      
+
+    /**
      * Show images by name. Can use RepoTags or RepoDigests as valid inputs.
      *
      * @param name Name of the image to filter on
      * @return ListImagesParam
      */
     public static ListImagesParam byName(final String name) {
-      return create("filter", name);
+      // In API v1.41, the "filter" query parameter is removed 
+      // create("filter", name);
+      return reference(name);
     }
   }
 
