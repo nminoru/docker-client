@@ -3,6 +3,7 @@
  * docker-client
  * --
  * Copyright (C) 2016 Spotify AB
+ * Copyright (C) 2024 Minoru NAKAMURA <nminoru1975@gmail.com>
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,6 +59,7 @@ public abstract class Image {
   @JsonProperty("Size")
   public abstract Long size();
 
+  @Nullable
   @JsonProperty("VirtualSize")
   public abstract Long virtualSize();
 

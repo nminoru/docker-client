@@ -3,6 +3,7 @@
  * docker-client
  * --
  * Copyright (C) 2016 Spotify AB
+ * Copyright (C) 2024 Minoru NAKAMURA <nminoru1975@gmail.com>
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,9 +48,11 @@ public abstract class ImageInfo {
   @JsonProperty("Created")
   public abstract Date created();
 
+  @Nullable    
   @JsonProperty("Container")
   public abstract String container();
 
+  @Nullable
   @JsonProperty("ContainerConfig")
   public abstract ContainerConfig containerConfig();
 
@@ -71,6 +74,7 @@ public abstract class ImageInfo {
   @JsonProperty("Size")
   public abstract Long size();
 
+  @Nullable
   @JsonProperty("VirtualSize")
   public abstract Long virtualSize();
 
