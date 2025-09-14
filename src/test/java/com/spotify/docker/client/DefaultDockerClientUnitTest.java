@@ -91,6 +91,7 @@ import com.spotify.docker.client.messages.swarm.Version;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.time.Instant;
 import java.util.Arrays;
@@ -105,7 +106,7 @@ import okhttp3.mockwebserver.RecordedRequest;
 import okio.Buffer;
 
 import org.glassfish.jersey.client.RequestEntityProcessing;
-import org.glassfish.jersey.internal.util.Base64;
+import org.apache.commons.codec.binary.Base64;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -119,7 +120,7 @@ import org.junit.rules.ExpectedException;
  * <p>
  * This test may not be a true "unit test", but using a MockWebServer where we can control the HTTP
  * responses sent by the server and capture the HTTP requests sent by the class-under-test is far
- * simpler that attempting to mock the {@link javax.ws.rs.client.Client} instance used by
+ * simpler that attempting to mock the {@link jakarta.ws.rs.client.Client} instance used by
  * DefaultDockerClient, since the Client has such a rich/fluent interface and many methods/classes
  * that would need to be mocked. Ultimately for testing DefaultDockerClient all we care about is
  * the HTTP requests it sends, rather than what HTTP client library it uses.</p>
@@ -769,7 +770,7 @@ public class DefaultDockerClientUnitTest {
 
     final ConfigSpec configSpec = ConfigSpec
         .builder()
-        .data(Base64.encodeAsString("foobar"))
+        .data(new String(Base64.encodeBase64("foobar".getBytes(StandardCharsets.UTF_8))))
         .name("foo.yaml")
         .build();
 
@@ -849,7 +850,7 @@ public class DefaultDockerClientUnitTest {
 
     final ConfigSpec configSpec = ConfigSpec
         .builder()
-        .data(Base64.encodeAsString("foobar"))
+        .data(new String(Base64.encodeBase64("foobar".getBytes(StandardCharsets.UTF_8))))
         .name("foo.yaml")
         .build();
 
@@ -871,7 +872,7 @@ public class DefaultDockerClientUnitTest {
 
     final ConfigSpec configSpec = ConfigSpec
         .builder()
-        .data(Base64.encodeAsString("foobar"))
+        .data(new String(Base64.encodeBase64("foobar".getBytes(StandardCharsets.UTF_8))))
         .name("foo.yaml")
         .build();
 
@@ -891,7 +892,7 @@ public class DefaultDockerClientUnitTest {
 
     final ConfigSpec configSpec = ConfigSpec
         .builder()
-        .data(Base64.encodeAsString("foobar"))
+        .data(new String(Base64.encodeBase64("foobar".getBytes(StandardCharsets.UTF_8))))
         .name("foo.yaml")
         .build();
 
@@ -1005,7 +1006,7 @@ public class DefaultDockerClientUnitTest {
 
     final ConfigSpec configSpec = ConfigSpec
         .builder()
-        .data(Base64.encodeAsString("foobar"))
+        .data(new String(Base64.encodeBase64("foobar".getBytes(StandardCharsets.UTF_8))))
         .name("foo.yaml")
         .build();
 
@@ -1025,7 +1026,7 @@ public class DefaultDockerClientUnitTest {
 
     final ConfigSpec configSpec = ConfigSpec
         .builder()
-        .data(Base64.encodeAsString("foobar"))
+        .data(new String(Base64.encodeBase64("foobar".getBytes(StandardCharsets.UTF_8))))
         .name("foo.yaml")
         .build();
 

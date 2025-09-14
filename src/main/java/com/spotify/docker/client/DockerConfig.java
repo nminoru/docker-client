@@ -31,7 +31,7 @@ import com.google.common.collect.ImmutableMap;
 import com.spotify.docker.client.messages.RegistryAuth;
 
 import java.util.Map;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Represents the contents of the docker config.json file.

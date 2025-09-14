@@ -63,7 +63,7 @@ import static java.lang.String.format;
 import static java.lang.System.getenv;
 import static java.util.Collections.singletonList;
 import static java.util.Collections.singletonMap;
-import static org.apache.commons.lang.StringUtils.containsIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.any;
@@ -241,6 +241,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -269,7 +270,7 @@ import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.pool.PoolStats;
 import org.glassfish.jersey.apache.connector.ApacheClientProperties;
-import org.glassfish.jersey.internal.util.Base64;
+import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.CustomTypeSafeMatcher;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -4973,7 +4974,7 @@ public class DefaultDockerClientTest {
     }
     assertThat(sut.listSecrets().size(), equalTo(0));
 
-    final String secretData = Base64.encodeAsString("testdata".getBytes());
+    final String secretData = new String(Base64.encodeBase64("testdata".getBytes(StandardCharsets.UTF_8)));
     
     final Map<String, String> labels = ImmutableMap.of("foo", "bar", "1", "a");
 
@@ -5142,7 +5143,7 @@ public class DefaultDockerClientTest {
     }
     assertThat(sut.listSecrets().size(), equalTo(0));
 
-    final String secretData = Base64.encodeAsString("testdata".getBytes());
+    final String secretData = new String(Base64.encodeBase64("testdata".getBytes(StandardCharsets.UTF_8)));
 
     final Map<String, String> labels = ImmutableMap.of("foo", "bar", "1", "a");
 
